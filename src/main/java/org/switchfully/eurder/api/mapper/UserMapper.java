@@ -1,8 +1,8 @@
-package org.switchfully.eurder.controller.mapper;
+package org.switchfully.eurder.api.mapper;
 
 import org.springframework.stereotype.Component;
-import org.switchfully.eurder.controller.dto.CreateCustomerDto;
-import org.switchfully.eurder.controller.dto.UserDto;
+import org.switchfully.eurder.api.dto.CreateCustomerDto;
+import org.switchfully.eurder.api.dto.UserDto;
 import org.switchfully.eurder.domain.Role;
 import org.switchfully.eurder.domain.User;
 

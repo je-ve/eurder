@@ -3,10 +3,10 @@ package org.switchfully.eurder.service;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-import org.switchfully.eurder.controller.dto.CreateItemGroupDto;
-import org.switchfully.eurder.controller.dto.CreateOrderDto;
-import org.switchfully.eurder.controller.dto.OrderDto;
-import org.switchfully.eurder.controller.mapper.OrderMapper;
+import org.switchfully.eurder.api.dto.CreateItemGroupDto;
+import org.switchfully.eurder.api.dto.CreateOrderDto;
+import org.switchfully.eurder.api.dto.OrderDto;
+import org.switchfully.eurder.api.mapper.OrderMapper;
 import org.switchfully.eurder.domain.*;
 
 import java.util.ArrayList;
@@ -36,7 +36,10 @@ public class OrderService {
         if (customer.getRole() != Role.CUSTOMER) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Only registered customers can place orders.");
         }
-        //Create an itemGroup for each dto
+
+        if (createOrderDto.getCreateItemGroupDtos() == null || createOrderDto.getCreateItemGroupDtos().size() == 0)
+            throw new MissingItemGroupException();
+
         List<ItemGroup> itemGroups = new ArrayList<>();
         for (CreateItemGroupDto dto : createOrderDto.getCreateItemGroupDtos()) {
             Item item = itemRepository.findById(dto.getItemId())

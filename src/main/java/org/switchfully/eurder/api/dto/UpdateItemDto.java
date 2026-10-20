@@ -1,4 +1,4 @@
-package org.switchfully.eurder.controller.dto;
+package org.switchfully.eurder.api.dto;
 
 public class UpdateItemDto {
     private final String name;

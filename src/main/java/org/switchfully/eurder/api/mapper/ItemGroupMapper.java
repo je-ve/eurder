@@ -1,7 +1,7 @@
-package org.switchfully.eurder.controller.mapper;
+package org.switchfully.eurder.api.mapper;
 
 import org.springframework.stereotype.Component;
-import org.switchfully.eurder.controller.dto.ItemGroupDto;
+import org.switchfully.eurder.api.dto.ItemGroupDto;
 import org.switchfully.eurder.domain.ItemGroup;
 
 import java.util.Collection;

@@ -1,11 +1,13 @@
 package org.switchfully.eurder.service;
 
 import org.springframework.stereotype.Service;
-import org.switchfully.eurder.controller.dto.CreateCustomerDto;
-import org.switchfully.eurder.controller.dto.UserDto;
-import org.switchfully.eurder.controller.mapper.UserMapper;
+import org.switchfully.eurder.api.dto.CreateCustomerDto;
+import org.switchfully.eurder.api.dto.UserDto;
+import org.switchfully.eurder.api.mapper.UserMapper;
 import org.switchfully.eurder.domain.User;
 import org.switchfully.eurder.domain.UserRepository;
+import org.switchfully.eurder.exception.CustomerNotFoundException;
+import org.switchfully.eurder.exception.EmailAlreadyExistsException;
 
 import java.util.Collection;
 
@@ -20,6 +22,7 @@ public class UserService {
     }
 
     public UserDto createCustomer(CreateCustomerDto createCustomerDto) {
+        validateEmailIsNotUsed(createCustomerDto.getEmail());
         User customer = userMapper.mapToUser(createCustomerDto);
         User savedCustomer = userRepository.save(customer);
         return userMapper.mapToUserDto(userRepository.save(savedCustomer));
@@ -32,7 +35,11 @@ public class UserService {
     public UserDto getCustomerById(String id) {
         return userRepository.findCustomerById(id)
                 .map(userMapper::mapToUserDto)
-                .orElseThrow(() -> new IllegalArgumentException("Could not find customer with id " + id));
+                .orElseThrow(() -> new CustomerNotFoundException(id));
+    }
+
+    private void validateEmailIsNotUsed(String email) {
+        if (userRepository.existByEmail(email)) throw new EmailAlreadyExistsException(email);
     }
 
 

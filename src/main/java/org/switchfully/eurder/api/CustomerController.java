@@ -1,10 +1,10 @@
-package org.switchfully.eurder.controller;
+package org.switchfully.eurder.api;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.switchfully.eurder.controller.dto.CreateCustomerDto;
-import org.switchfully.eurder.controller.dto.UserDto;
-import org.switchfully.eurder.controller.mapper.UserMapper;
+import org.switchfully.eurder.api.dto.CreateCustomerDto;
+import org.switchfully.eurder.api.dto.UserDto;
+import org.switchfully.eurder.api.mapper.UserMapper;
 import org.switchfully.eurder.service.UserService;
 
 import java.util.Collection;

@@ -1,4 +1,4 @@
-package org.switchfully.eurder.controller.dto;
+package org.switchfully.eurder.api.dto;
 
 import org.springframework.stereotype.Component;
 

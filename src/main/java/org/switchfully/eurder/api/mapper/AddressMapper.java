@@ -1,7 +1,7 @@
-package org.switchfully.eurder.controller.mapper;
+package org.switchfully.eurder.api.mapper;
 
 import org.springframework.stereotype.Component;
-import org.switchfully.eurder.controller.dto.AddressDto;
+import org.switchfully.eurder.api.dto.AddressDto;
 import org.switchfully.eurder.domain.Address;
 
 @Component

@@ -1,4 +1,4 @@
-package org.switchfully.eurder.controller.dto;
+package org.switchfully.eurder.api.dto;
 
 public class CreateItemDto {
 
@@ -12,5 +12,21 @@ public class CreateItemDto {
         this.description = description;
         this.price = price;
         this.stock = stock;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public int getStock() {
+        return stock;
     }
 }

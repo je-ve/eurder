@@ -1,9 +1,9 @@
-package org.switchfully.eurder.controller;
+package org.switchfully.eurder.api;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.switchfully.eurder.controller.dto.CreateOrderDto;
-import org.switchfully.eurder.controller.dto.OrderDto;
+import org.switchfully.eurder.api.dto.CreateOrderDto;
+import org.switchfully.eurder.api.dto.OrderDto;
 import org.switchfully.eurder.service.OrderService;
 
 @RestController

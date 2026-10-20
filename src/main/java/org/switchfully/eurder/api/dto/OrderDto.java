@@ -1,6 +1,4 @@
-package org.switchfully.eurder.controller.dto;
-
-import org.switchfully.eurder.domain.ItemGroup;
+package org.switchfully.eurder.api.dto;
 
 import java.util.List;
 

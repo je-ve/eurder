@@ -1,8 +1,4 @@
-package org.switchfully.eurder.controller.dto;
-
-import org.springframework.stereotype.Component;
-import org.switchfully.eurder.domain.Address;
-import org.switchfully.eurder.domain.Role;
+package org.switchfully.eurder.api.dto;
 
 
 public class CreateCustomerDto {

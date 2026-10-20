@@ -1,6 +1,5 @@
-package org.switchfully.eurder.controller.dto;
+package org.switchfully.eurder.api.dto;
 
-import org.switchfully.eurder.domain.Address;
 import org.switchfully.eurder.domain.Role;
 
 public class UserDto {
