@@ -19,6 +19,10 @@ public class UserRepository {
         return Optional.ofNullable(users.get(id));
     }
 
+    public Optional<User> findCustomerById(String id) {
+        return findById(id).filter(u -> u.getRole() == Role.CUSTOMER);
+    }
+
     public User save(User user) {
         users.put(user.getId(), user);
         return user;
@@ -26,5 +30,9 @@ public class UserRepository {
 
     public Collection<User> getAll() {
         return users.values();
+    }
+
+    public Collection<User> getAllCustomers() {
+        return users.values().stream().filter(user -> user.getRole() == Role.CUSTOMER).toList();
     }
 }

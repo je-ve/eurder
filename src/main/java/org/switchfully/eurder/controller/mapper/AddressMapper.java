@@ -1,10 +1,17 @@
 package org.switchfully.eurder.controller.mapper;
 
+import org.springframework.stereotype.Component;
+import org.switchfully.eurder.controller.dto.AddressDto;
 import org.switchfully.eurder.domain.Address;
 
+@Component
 public class AddressMapper {
 
-    public Address mapToDto (String streetName, String houseNumber, String postalCode, String city){
+    public AddressDto mapToDto(Address address) {
+        return new AddressDto(address.getStreetName(), address.getHouseNumber(), address.getPostalCode(), address.getCity());
+    }
 
+    public Address mapToAddress(AddressDto addressDto) {
+        return new Address(addressDto.getStreetName(), addressDto.getHouseNumber(), addressDto.getPostalCode(), addressDto.getCity());
     }
 }

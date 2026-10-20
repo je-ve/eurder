@@ -12,4 +12,20 @@ public class AddressDto {
         this.postalCode = postalCode;
         this.city = city;
     }
+
+    public String getStreetName() {
+        return streetName;
+    }
+
+    public String getHouseNumber() {
+        return houseNumber;
+    }
+
+    public String getPostalCode() {
+        return postalCode;
+    }
+
+    public String getCity() {
+        return city;
+    }
 }
