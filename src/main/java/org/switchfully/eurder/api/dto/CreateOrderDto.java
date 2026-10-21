@@ -7,13 +7,19 @@ import java.util.List;
 @Component
 public class CreateOrderDto {
 
+    private String customerId;
     private List<CreateItemGroupDto> createItemGroupDtos;
 
     public CreateOrderDto() {
     }
 
-    public CreateOrderDto(List<CreateItemGroupDto> createitemGroupDtos) {
+    public CreateOrderDto(String customerId, List<CreateItemGroupDto> createitemGroupDtos) {
+        this.customerId = customerId;
         this.createItemGroupDtos = createitemGroupDtos;
+    }
+
+    public String getCustomerId() {
+        return customerId;
     }
 
     public List<CreateItemGroupDto> getCreateItemGroupDtos() {

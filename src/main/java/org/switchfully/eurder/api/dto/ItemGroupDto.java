@@ -17,5 +17,23 @@ public class ItemGroupDto {
         this.shippingDate = shippingDate;
     }
 
-    
+    public String getItemId() {
+        return itemId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getAmount() {
+        return amount;
+    }
+
+    public double getPricePerUnit() {
+        return pricePerUnit;
+    }
+
+    public LocalDate getShippingDate() {
+        return shippingDate;
+    }
 }

@@ -39,4 +39,9 @@ public class UserRepository {
     public boolean existByEmail(String email) {
         return users.values().stream().anyMatch(u -> u.getEmail().equalsIgnoreCase(email));
     }
+
+    public boolean customerExistsByUserid(String customerId) {
+        return users.values().stream().anyMatch(user -> user.getRole() == Role.CUSTOMER
+        &&  user.getId().equals(customerId));
+    }
 }

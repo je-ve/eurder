@@ -1,5 +1,7 @@
 package org.switchfully.eurder.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.switchfully.eurder.api.dto.CreateCustomerDto;
 import org.switchfully.eurder.api.dto.UserDto;
@@ -15,6 +17,7 @@ import java.util.Collection;
 public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     public UserService(UserRepository userRepository, UserMapper userMapper) {
         this.userRepository = userRepository;
@@ -24,8 +27,7 @@ public class UserService {
     public UserDto createCustomer(CreateCustomerDto createCustomerDto) {
         validateEmailIsNotUsed(createCustomerDto.getEmail());
         User customer = userMapper.mapToUser(createCustomerDto);
-        User savedCustomer = userRepository.save(customer);
-        return userMapper.mapToUserDto(userRepository.save(savedCustomer));
+        return userMapper.mapToUserDto(userRepository.save(customer));
     }
 
     public Collection<UserDto> getAllCustomers() {

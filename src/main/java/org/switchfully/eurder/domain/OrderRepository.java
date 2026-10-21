@@ -14,7 +14,7 @@ public class OrderRepository {
         this.orders = new ConcurrentHashMap<>();
     }
 
-    Optional<Order> findById(String id) {
+    public Optional<Order> findById(String id) {
         return Optional.ofNullable(orders.get(id));
     }
 
@@ -26,6 +26,12 @@ public class OrderRepository {
     public Collection<Order> getAll() {
         return orders.values();
     }
+
+    public Collection<Order> getByCustomerId(String customerId) {
+        return orders.values().stream().filter(order -> order.getCustomerId().equals(customerId)).toList();
+    }
+
+
 }
 
 

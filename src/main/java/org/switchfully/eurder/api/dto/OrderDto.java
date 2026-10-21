@@ -14,4 +14,20 @@ public class OrderDto {
         this.itemGroups = itemGroupDtos;
         this.totalPrice = totalPrice;
     }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getCustomerId() {
+        return customerId;
+    }
+
+    public List<ItemGroupDto> getItemGroups() {
+        return itemGroups;
+    }
+
+    public double getTotalPrice() {
+        return totalPrice;
+    }
 }
