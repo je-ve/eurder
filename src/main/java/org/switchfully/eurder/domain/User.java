@@ -48,5 +48,25 @@ public class User {
     public Role getRole() {
         return role;
     }
+
+
+
+    //FOR SEEDING
+    public static User createWithId(String id, String firstName, String lastName, String email,
+                                    Address address, String phoneNumber, Role role) {
+        return new User(id, firstName, lastName, email, address, phoneNumber, role);
+    }
+    private User(String id, String firstName, String lastName, String email, Address address, String phoneNumber, Role role) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.address = address;
+        this.phoneNumber = phoneNumber;
+        this.role = role;
+    }
+
+
+
 }
 

@@ -61,4 +61,19 @@ public class Item {
     public void addStock(int quantity) {
         this.stock += quantity;
     }
+
+
+    //SEED
+    public static Item createWithId(String id, String name, String description, double price, int stock) {
+        return new Item(id, name, description, price, stock);
+    }
+
+    private Item(String id, String name, String description, double price, int stock) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.stock = stock;
+    }
+
 }

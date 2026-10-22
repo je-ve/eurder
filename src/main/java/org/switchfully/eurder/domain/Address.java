@@ -2,6 +2,7 @@ package org.switchfully.eurder.domain;
 
 
 public class Address {
+
     private final String streetName;
     private final String houseNumber;
     private final String postalCode;

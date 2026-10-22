@@ -66,7 +66,7 @@ public class OrderService {
 
     public OrderDto reorderByOrderId(String customerId, String orderId) {
         Order order = orderRepository.findById(orderId).orElseThrow(() -> new OrderNotFoundException(orderId));
-        //if(order.getCustomerId()!=customerId) throw new ForbiddenException("No order found for this id and this customer");
+        if(!order.getCustomerId().equals(customerId)) throw new ForbiddenException("No order found for this id and this customer");
         List<ItemGroup> itemGroups = order.getItemGroups().stream()
                 .map(itemGroup -> new ItemGroup(
                         itemRepository.findById(itemGroup.getItemId())

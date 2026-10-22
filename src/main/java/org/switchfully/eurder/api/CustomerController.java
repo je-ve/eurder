@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import org.switchfully.eurder.api.dto.CreateCustomerDto;
 import org.switchfully.eurder.api.dto.UserDto;
 import org.switchfully.eurder.api.mapper.UserMapper;
-import org.switchfully.eurder.domain.User;
 import org.switchfully.eurder.service.UserService;
 
 import java.util.Collection;

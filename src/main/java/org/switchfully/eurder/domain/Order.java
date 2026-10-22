@@ -37,4 +37,17 @@ public class Order {
     public double getTotalPrice() {
         return totalPrice;
     }
+
+
+    //SEED
+    public static Order createWithId(String id, String customerId, List<ItemGroup> itemGroups) {
+        return new Order(id, customerId, itemGroups);
+    }
+
+    private Order(String id, String customerId, List<ItemGroup> itemGroups) {
+        this.id = id;
+        this.customerId = customerId;
+        this.itemGroups = itemGroups;
+        this.totalPrice = calculateTotalPrice();
+    }
 }
