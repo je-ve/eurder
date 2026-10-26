@@ -23,6 +23,7 @@ public class UserRepository {
         return findById(id).filter(u -> u.getRole() == Role.CUSTOMER);
     }
 
+
     public User save(User user) {
         users.put(user.getId(), user);
         return user;
@@ -38,6 +39,10 @@ public class UserRepository {
 
     public boolean existByEmail(String email) {
         return users.values().stream().anyMatch(u -> u.getEmail().equalsIgnoreCase(email));
+    }
+
+    public Optional<User> getByEmail(String email) {
+        return users.values().stream().filter(u -> u.getEmail().equalsIgnoreCase(email)).findFirst();
     }
 
     public boolean customerExistsByUserid(String customerId) {

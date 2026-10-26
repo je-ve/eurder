@@ -1,0 +1,13 @@
+package org.switchfully.eurder.domain;
+
+public enum Feature {
+    CREATE_CUSTOMER_ACCOUNT,
+    ADD_NEW_ITEM,
+    CREATE_ORDER,
+    VIEW_ALL_CUSTOMERS,
+    VIEW_SINGLE_CUSTOMER,
+    VIEW_ITEM_STOCK_OVERVIEW,
+    UPDATE_ITEM,
+    VIEW_CUSTOMER_ORDER_REPORT,
+    REORDER_EXISTING_ORDER,
+}

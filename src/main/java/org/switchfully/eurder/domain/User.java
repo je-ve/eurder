@@ -7,6 +7,7 @@ public class User {
     private final String firstName;
     private final String lastName;
     private final String email;
+    private final String password;
     private final Address address;
     private final String phoneNumber;
     private final Role role;
@@ -19,6 +20,7 @@ public class User {
         this.address = address;
         this.phoneNumber = phoneNumber;
         this.role = role;
+        this.password = "password";
     }
 
     public String getId() {
@@ -31,6 +33,10 @@ public class User {
 
     public String getLastName() {
         return lastName;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     public String getEmail() {
@@ -49,6 +55,12 @@ public class User {
         return role;
     }
 
+    public boolean doesPasswordMatch(String password) {
+        return this.password.equals(password);
+    }
+    boolean canHaveAccessTo(Feature feature) {
+        return role.containsFeature(feature);
+    }
 
 
     //FOR SEEDING
@@ -56,16 +68,17 @@ public class User {
                                     Address address, String phoneNumber, Role role) {
         return new User(id, firstName, lastName, email, address, phoneNumber, role);
     }
+
     private User(String id, String firstName, String lastName, String email, Address address, String phoneNumber, Role role) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
+        this.password = "password";
         this.address = address;
         this.phoneNumber = phoneNumber;
         this.role = role;
     }
-
 
 
 }
