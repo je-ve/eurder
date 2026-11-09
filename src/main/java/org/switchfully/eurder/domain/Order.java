@@ -1,53 +1,46 @@
 package org.switchfully.eurder.domain;
 
+import jakarta.persistence.*;
+
 import java.util.List;
 import java.util.UUID;
 
+@Entity
+@Table(name = "order")
 public class Order {
-    private final String id;
-    private final String customerId; // Tracks the known customer by ID
-    private final List<ItemGroup> itemGroups;
-    private final double totalPrice;
+    @Id
+    private String id;
+    private String customerId;
+    private double totalPrice;
 
-    public Order(String customerId, List<ItemGroup> itemGroups) {
+    public Order(String customerId,double totalPrice) {
         this.id = UUID.randomUUID().toString();
         this.customerId = customerId;
-        this.itemGroups = itemGroups;
-        this.totalPrice = calculateTotalPrice();
+        this.totalPrice = totalPrice;
     }
 
-    private double calculateTotalPrice() {
-        return itemGroups.stream()
-                .mapToDouble(ItemGroup::calculateGroupPrice)
-                .sum();
+    public Order() {
     }
 
     public String getId() {
         return id;
     }
-
     public String getCustomerId() {
         return customerId;
     }
-
-    public List<ItemGroup> getItemGroups() {
-        return itemGroups;
-    }
-
     public double getTotalPrice() {
         return totalPrice;
     }
 
 
     //SEED
-    public static Order createWithId(String id, String customerId, List<ItemGroup> itemGroups) {
-        return new Order(id, customerId, itemGroups);
+    public static Order createWithId(String id, String customerId, double totalPrice) {
+        return new Order(id, customerId, totalPrice);
     }
 
-    private Order(String id, String customerId, List<ItemGroup> itemGroups) {
+    private Order(String id, String customerId, double totalPrice) {
         this.id = id;
         this.customerId = customerId;
-        this.itemGroups = itemGroups;
-        this.totalPrice = calculateTotalPrice();
+        this.totalPrice = totalPrice;
     }
 }

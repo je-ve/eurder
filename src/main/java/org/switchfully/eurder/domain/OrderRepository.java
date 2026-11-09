@@ -1,10 +1,20 @@
 package org.switchfully.eurder.domain;
 
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Collection;
-import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
+
+
+public interface OrderRepository extends JpaRepository<Order, String> {
+
+    // SELECT * FROM orders WHERE customer_id = ?
+    Collection<Order> findAllByCustomerId(String customerId);
+}
+
+
+
+
+/*
 
 @Repository
 public class OrderRepository {
@@ -33,5 +43,5 @@ public class OrderRepository {
 
 
 }
-
+ */
 

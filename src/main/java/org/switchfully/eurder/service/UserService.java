@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.switchfully.eurder.api.dto.CreateCustomerDto;
 import org.switchfully.eurder.api.dto.UserDto;
 import org.switchfully.eurder.api.mapper.UserMapper;
+import org.switchfully.eurder.domain.Role;
 import org.switchfully.eurder.domain.User;
 import org.switchfully.eurder.domain.UserRepository;
 import org.switchfully.eurder.exception.CustomerNotFoundException;
@@ -31,7 +32,7 @@ public class UserService {
     }
 
     public Collection<UserDto> getAllCustomers() {
-        return userMapper.mapToUserDto(userRepository.getAllCustomers());
+        return userMapper.mapToUserDto(userRepository.findAllByRole(Role.CUSTOMER));
     }
 
     public UserDto getCustomerById(String id) {
@@ -41,7 +42,7 @@ public class UserService {
     }
 
     private void validateEmailIsNotUsed(String email) {
-        if (userRepository.existByEmail(email)) throw new EmailAlreadyExistsException(email);
+        if (userRepository.existsByEmailIgnoreCase(email)) throw new EmailAlreadyExistsException(email);
     }
 
 

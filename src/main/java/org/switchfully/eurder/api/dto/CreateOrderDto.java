@@ -21,7 +21,6 @@ public class CreateOrderDto {
     public String getCustomerId() {
         return customerId;
     }
-
     public List<CreateItemGroupDto> getCreateItemGroupDtos() {
         return createItemGroupDtos;
     }

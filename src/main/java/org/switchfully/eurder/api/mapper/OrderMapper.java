@@ -11,6 +11,7 @@ import org.switchfully.eurder.domain.Order;
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class OrderMapper {
@@ -21,21 +22,24 @@ public class OrderMapper {
         this.itemGroupMapper = itemGroupMapper;
     }
 
-    public OrderDto mapToDto(Order savedOrder) {
+    public OrderDto mapToDto(Order savedOrder, List<ItemGroup> itemGroups) {
         return new OrderDto(savedOrder.getId(), savedOrder.getCustomerId(),
-                itemGroupMapper.mapToDto(savedOrder.getItemGroups()), savedOrder.getTotalPrice());
+                itemGroupMapper.mapToDto(itemGroups), savedOrder.getTotalPrice());
     }
 
-    public OrderCustomerReportDto mapToCustomerReportDto(Order order) {
+    public OrderCustomerReportDto mapToCustomerReportDto(Order order, List<ItemGroup> itemGroups) {
         return new OrderCustomerReportDto(order.getId(),
-                itemGroupMapper.mapToCustomerReportDto(order.getItemGroups()), order.getTotalPrice());
+                itemGroupMapper.mapToCustomerReportDto(itemGroups), order.getTotalPrice());
     }
 
-    public List<OrderCustomerReportDto> mapToCustomerReportDto(Collection<Order> orders) {
-        return orders.stream().map(this::mapToCustomerReportDto).toList();
+    // Aangepaste methode: accepteert de orders én de voorgegroepeerde itemgroups
+    public List<OrderCustomerReportDto> mapToCustomerReportDto(Collection<Order> orders, Map<String, List<ItemGroup>> itemGroupsPerOrder) {
+        return orders.stream()
+                .map(order -> {
+                    // Haal de lijst met itemgroups op voor deze specifieke order (of een lege lijst als er geen zijn)
+                    List<ItemGroup> groupsForOrder = itemGroupsPerOrder.getOrDefault(order.getId(), List.of());
+                    return this.mapToCustomerReportDto(order, groupsForOrder);
+                })
+                .toList();
     }
-
-
-
-
 }

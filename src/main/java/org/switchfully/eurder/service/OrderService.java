@@ -1,5 +1,6 @@
 package org.switchfully.eurder.service;
 
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import org.switchfully.eurder.api.dto.CreateItemGroupDto;
 import org.switchfully.eurder.api.dto.CreateOrderDto;
@@ -7,27 +8,30 @@ import org.switchfully.eurder.api.dto.CustomerReportDto;
 import org.switchfully.eurder.api.dto.OrderDto;
 import org.switchfully.eurder.api.mapper.OrderMapper;
 import org.switchfully.eurder.domain.*;
-import org.switchfully.eurder.exception.CustomerNotFoundException;
-import org.switchfully.eurder.exception.ForbiddenException;
-import org.switchfully.eurder.exception.ItemNotFoundException;
-import org.switchfully.eurder.exception.OrderNotFoundException;
+import org.switchfully.eurder.exception.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @Service
+@Transactional
 public class OrderService {
 
     private final OrderRepository orderRepository;
     private final ItemRepository itemRepository;
+    private final ItemGroupRepository itemGroupRepository;
     private final UserRepository userRepository;
     private final OrderMapper orderMapper;
 
-    public OrderService(OrderRepository orderRepository, ItemRepository itemRepository, UserRepository userRepository, OrderMapper orderMapper) {
+    public OrderService(OrderRepository orderRepository, ItemRepository itemRepository,
+                        ItemGroupRepository itemGroupRepository, UserRepository userRepository, OrderMapper orderMapper) {
         this.orderRepository = orderRepository;
         this.itemRepository = itemRepository;
+        this.itemGroupRepository = itemGroupRepository;
         this.userRepository = userRepository;
         this.orderMapper = orderMapper;
     }
@@ -37,6 +41,7 @@ public class OrderService {
         User customer = userRepository.findById(createOrderDto.getCustomerId())
                 .orElseThrow(() -> new CustomerNotFoundException(createOrderDto.getCustomerId()));
 
+        //todo move security check to controller, use feature not role
         if (customer.getRole() != Role.CUSTOMER) {
             throw new ForbiddenException("Only registered customers can place orders.");
         }
@@ -44,29 +49,51 @@ public class OrderService {
         if (createOrderDto.getCreateItemGroupDtos() == null || createOrderDto.getCreateItemGroupDtos().isEmpty())
             throw new MissingItemGroupException();
 
+        Order createdOrder = orderRepository.save(new Order(customer.getId(), calculateTotal(createOrderDto.getCreateItemGroupDtos())));
+
         List<ItemGroup> itemGroups = new ArrayList<>();
         for (CreateItemGroupDto dto : createOrderDto.getCreateItemGroupDtos()) {
             Item item = itemRepository.findById(dto.getItemId()).orElseThrow(() -> new ItemNotFoundException(dto.getItemId()));
-            ItemGroup itemGroup = new ItemGroup(item, dto.getAmount());
+            ItemGroup itemGroup = new ItemGroup(item, dto.getAmount(), createdOrder);
             itemGroups.add(itemGroup);
         }
+        itemGroupRepository.saveAll(itemGroups);
 
         //TODO update stock
-        return orderMapper.mapToDto(orderRepository.save(new Order(customer.getId(), itemGroups)));
+        return orderMapper.mapToDto(createdOrder, itemGroups);
+    }
+
+    private double calculateTotal(List<CreateItemGroupDto> createItemGroupDtos) {
+        return createItemGroupDtos.stream()
+                .mapToDouble(itemGroup -> {
+                    Item item = itemRepository.findById(itemGroup.getItemId())
+                            .orElseThrow(() -> new ItemNotFoundException(itemGroup.getItemId()));
+                    return itemGroup.getAmount() * item.getPrice();
+                })
+                .sum();
     }
 
     public CustomerReportDto getCustomerReport(String customerId) {
-        if (!userRepository.customerExistsByUserid(customerId)) throw new CustomerNotFoundException(customerId);
-        Collection<Order> orders = orderRepository.getByCustomerId(customerId);
-        return new CustomerReportDto(orderMapper.mapToCustomerReportDto(orders),
-                orders.stream()
-                        .mapToDouble(Order::getTotalPrice)
-                        .sum());
+        if (!userRepository.existsByIdAndRole(customerId, Role.CUSTOMER))
+            throw new CustomerNotFoundException(customerId);
+        Collection<Order> orders = orderRepository.findAllByCustomerId(customerId);
+        List<String> orderIds = orders.stream().map(Order::getId).toList();
+        List<ItemGroup> allItemGroups = itemGroupRepository.findAllByOrderIdIn(orderIds);
+
+        Map<String, List<ItemGroup>> itemGroupsPerOrder = allItemGroups.stream()
+                .collect(Collectors.groupingBy(itemGroup -> itemGroup.getOrder().getId()));
+
+        return orderMapper.mapToCustomerReportDto(orders, itemGroupsPerOrder);
+
+        //nog totaal berekenene en dan customerReportDto maken met bovenstaande lijst
     }
 
+
+  /*
     public OrderDto reorderByOrderId(String customerId, String orderId) {
         Order order = orderRepository.findById(orderId).orElseThrow(() -> new OrderNotFoundException(orderId));
-        if(!order.getCustomerId().equals(customerId)) throw new ForbiddenException("No order found for this id and this customer");
+        if (!order.getCustomerId().equals(customerId))
+            throw new ForbiddenException("No order found for this id and this customer");
         List<ItemGroup> itemGroups = order.getItemGroups().stream()
                 .map(itemGroup -> new ItemGroup(
                         itemRepository.findById(itemGroup.getItemId())
@@ -74,6 +101,7 @@ public class OrderService {
                         itemGroup.getAmount())).toList();
         return orderMapper.mapToDto(orderRepository.save(new Order(customerId, itemGroups)));
     }
+    */
 
 }
 

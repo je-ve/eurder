@@ -1,20 +1,24 @@
 package org.switchfully.eurder.domain;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Collection;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@SpringBootTest
 class UserRepositoryTest {
 
+    @Autowired
     private UserRepository userRepository;
     private Address defaultAddress;
 
     @BeforeEach
     void setUp() {
-        userRepository = new UserRepository();
         defaultAddress = new Address("Stationstreet", "42", "1000", "Brussel");
     }
 

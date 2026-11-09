@@ -35,14 +35,19 @@ public class SeedData {
     private final Item secondItem = Item.createWithId("item-id-002", "table", "a table", 20.0, 20);
     private final Item thirdItem = Item.createWithId("item-id-003", "TV", "a TV", 5.0, 30);
 
-    private final ItemGroup firstItemGroup = new ItemGroup(firstItem, 5);
-    private final ItemGroup secondItemGroup = new ItemGroup(firstItem, 10);
-    private final ItemGroup thirdItemGroup = new ItemGroup(secondItem, 2);
-    private final ItemGroup fourthItemGroup = new ItemGroup(thirdItem, 3);
+    /*
+      private final ItemGroup firstItemGroup = new ItemGroup(firstItem, 5);
+      private final ItemGroup secondItemGroup = new ItemGroup(firstItem, 10);
+      private final ItemGroup thirdItemGroup = new ItemGroup(secondItem, 2);
+      private final ItemGroup fourthItemGroup = new ItemGroup(thirdItem, 3);
 
-    private final Order firstOrder = Order.createWithId("order-id-001", "user-id-001", List.of(firstItemGroup, secondItemGroup));
-    private final Order secondOrder = Order.createWithId("order-id-002", "user-id-002", List.of(thirdItemGroup, fourthItemGroup));
 
+
+      private final Order firstOrder = Order.createWithId("order-id-001", "user-id-001", List.of(firstItemGroup, secondItemGroup));
+      private final Order secondOrder = Order.createWithId("order-id-002", "user-id-002", List.of(thirdItemGroup, fourthItemGroup));
+
+
+     */
     @PostConstruct
     public void init() {
         if (addSeedData()) {
@@ -57,8 +62,10 @@ public class SeedData {
             itemRepository.save(thirdItem);
 
             // Sla de orders op
+         /*
             orderRepository.save(firstOrder);
             orderRepository.save(secondOrder);
+          */
         }
     }
 }

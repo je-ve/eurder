@@ -1,10 +1,17 @@
 package org.switchfully.eurder.domain;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
 import java.util.UUID;
 
+@Entity
+@Table(name = "items")
 public class Item {
 
-    private final String id;
+    @Id
+    private String id;
     private String name;
     private String description;
     private double price;
@@ -16,6 +23,9 @@ public class Item {
         this.description = description;
         this.price = price;
         this.stock = stock;
+    }
+
+    public Item() {
     }
 
     public String getId() {

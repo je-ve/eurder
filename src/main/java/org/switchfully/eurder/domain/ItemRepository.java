@@ -1,10 +1,17 @@
 package org.switchfully.eurder.domain;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+
+public interface ItemRepository extends JpaRepository<Item, String> {
+
+}
+
+/*
 
 @Repository
 public class ItemRepository {
@@ -28,3 +35,4 @@ public class ItemRepository {
     }
 
 }
+ */

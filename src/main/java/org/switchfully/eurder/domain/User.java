@@ -1,16 +1,27 @@
 package org.switchfully.eurder.domain;
 
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
 import java.util.UUID;
 
+@Entity
+@Table(name="users")
 public class User {
-    private final String id;
-    private final String firstName;
-    private final String lastName;
-    private final String email;
-    private final String password;
-    private final Address address;
-    private final String phoneNumber;
-    private final Role role;
+
+    @Id
+    private String id;
+    private String firstName;
+    private String lastName;
+    private String email;
+    private String password;
+
+    @Embedded
+    private Address address;
+    private String phoneNumber;
+    private Role role;
 
     public User(String firstName, String lastName, String email, Address address, String phoneNumber, Role role) {
         this.id = UUID.randomUUID().toString();
@@ -21,6 +32,9 @@ public class User {
         this.phoneNumber = phoneNumber;
         this.role = role;
         this.password = "password";
+    }
+
+    public User() {
     }
 
     public String getId() {

@@ -34,12 +34,14 @@ public class OrderController {
         return orderService.getCustomerReport(id);
     }
 
+    /*
     @PostMapping(path = "/customer/{customerId}", produces = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
     public OrderDto reorderByOrderId(@PathVariable String customerId, @RequestBody String orderId) {
         logger.info("reorderByDto was called" + orderId);
         return orderService.reorderByOrderId(customerId, orderId);
     }
+     */
 }
 
 
