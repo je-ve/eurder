@@ -16,11 +16,4 @@ public class OrderCustomerReportDto {
     public String getId() {
         return id;
     }
-
-    public List<ItemGroupCustomerReportDto> getItemGroups() {
-        return itemGroupCustomerReportDtos;
-    }
-    public double getTotalPrice() {
-        return totalPrice;
-    }
 }
