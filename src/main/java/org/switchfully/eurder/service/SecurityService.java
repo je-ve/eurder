@@ -1,6 +1,7 @@
 package org.switchfully.eurder.service;
 
 import org.springframework.stereotype.Service;
+import org.switchfully.eurder.domain.Feature;
 import org.switchfully.eurder.domain.User;
 import org.switchfully.eurder.domain.UserRepository;
 import org.switchfully.eurder.exception.ForbiddenException;

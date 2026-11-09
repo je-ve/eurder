@@ -58,10 +58,9 @@ public class User {
     public boolean doesPasswordMatch(String password) {
         return this.password.equals(password);
     }
-    boolean canHaveAccessTo(Feature feature) {
+    public boolean canHaveAccessTo(Feature feature) {
         return role.containsFeature(feature);
     }
-
 
     //FOR SEEDING
     public static User createWithId(String id, String firstName, String lastName, String email,
