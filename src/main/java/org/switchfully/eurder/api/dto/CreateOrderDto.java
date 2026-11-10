@@ -8,20 +8,20 @@ import java.util.List;
 public class CreateOrderDto {
 
     private String customerId;
-    private List<CreateItemGroupDto> createItemGroupDtos;
+    private List<CreateItemGroupRequest> createItemGroupRequests;
 
     public CreateOrderDto() {
     }
 
-    public CreateOrderDto(String customerId, List<CreateItemGroupDto> createitemGroupDtos) {
+    public CreateOrderDto(String customerId, List<CreateItemGroupRequest> createitemGroupRequests) {
         this.customerId = customerId;
-        this.createItemGroupDtos = createitemGroupDtos;
+        this.createItemGroupRequests = createitemGroupRequests;
     }
 
     public String getCustomerId() {
         return customerId;
     }
-    public List<CreateItemGroupDto> getCreateItemGroupDtos() {
-        return createItemGroupDtos;
+    public List<CreateItemGroupRequest> getCreateItemGroupDtos() {
+        return createItemGroupRequests;
     }
 }

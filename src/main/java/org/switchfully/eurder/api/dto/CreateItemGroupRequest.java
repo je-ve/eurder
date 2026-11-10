@@ -1,13 +1,13 @@
 package org.switchfully.eurder.api.dto;
 
-public class CreateItemGroupDto {
+public class CreateItemGroupRequest {
     private String itemId;
     private int amount;
 
-    public CreateItemGroupDto() {
+    public CreateItemGroupRequest() {
     }
 
-    public CreateItemGroupDto(String itemId, int amount) {
+    public CreateItemGroupRequest(String itemId, int amount) {
         this.itemId = itemId;
         this.amount = amount;
     }

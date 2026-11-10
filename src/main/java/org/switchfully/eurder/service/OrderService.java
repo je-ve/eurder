@@ -2,10 +2,10 @@ package org.switchfully.eurder.service;
 
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
-import org.switchfully.eurder.api.dto.CreateItemGroupDto;
+import org.switchfully.eurder.api.dto.CreateItemGroupRequest;
 import org.switchfully.eurder.api.dto.CreateOrderDto;
-import org.switchfully.eurder.api.dto.CustomerReportDto;
-import org.switchfully.eurder.api.dto.OrderDto;
+import org.switchfully.eurder.api.dto.CustomerReportResponse;
+import org.switchfully.eurder.api.dto.OrderResponse;
 import org.switchfully.eurder.api.mapper.OrderMapper;
 import org.switchfully.eurder.domain.*;
 import org.switchfully.eurder.exception.*;
@@ -37,7 +37,7 @@ public class OrderService {
         this.orderMapper = orderMapper;
     }
 
-    public OrderDto createOrder(CreateOrderDto createOrderDto) {
+    public OrderResponse createOrder(CreateOrderDto createOrderDto) {
         //create existById method
         User customer = userRepository.findById(createOrderDto.getCustomerId())
                 .orElseThrow(() -> new CustomerNotFoundException(createOrderDto.getCustomerId()));
@@ -53,7 +53,7 @@ public class OrderService {
         Order createdOrder = orderRepository.save(new Order(customer.getId(), calculateTotalForDtos(createOrderDto.getCreateItemGroupDtos())));
 
         List<ItemGroup> itemGroups = new ArrayList<>();
-        for (CreateItemGroupDto dto : createOrderDto.getCreateItemGroupDtos()) {
+        for (CreateItemGroupRequest dto : createOrderDto.getCreateItemGroupDtos()) {
             Item item = itemRepository.findById(dto.getItemId()).orElseThrow(() -> new ItemNotFoundException(dto.getItemId()));
             ItemGroup itemGroup = new ItemGroup(item, dto.getAmount(), createdOrder);
             itemGroups.add(itemGroup);
@@ -64,8 +64,8 @@ public class OrderService {
         return orderMapper.mapToDto(createdOrder, itemGroups);
     }
 
-    private BigDecimal calculateTotalForDtos(List<CreateItemGroupDto> createItemGroupDtos) {
-        return createItemGroupDtos.stream()
+    private BigDecimal calculateTotalForDtos(List<CreateItemGroupRequest> createItemGroupRequests) {
+        return createItemGroupRequests.stream()
                 .map(itemGroup -> {
                     Item item = itemRepository.findById(itemGroup.getItemId())
                             .orElseThrow(() -> new ItemNotFoundException(itemGroup.getItemId()));
@@ -81,7 +81,7 @@ public class OrderService {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    public CustomerReportDto getCustomerReport(String customerId) {
+    public CustomerReportResponse getCustomerReport(String customerId) {
 
         if (!userRepository.existsByIdAndRole(customerId, Role.CUSTOMER))
             throw new CustomerNotFoundException(customerId);
@@ -98,7 +98,7 @@ public class OrderService {
     }
 
 
-    public OrderDto reorderByOrderId(String customerId, String orderId) {
+    public OrderResponse reorderByOrderId(String customerId, String orderId) {
         Order order = orderRepository.findById(orderId).orElseThrow(() -> new OrderNotFoundException(orderId));
         if (!order.getCustomerId().equals(customerId))
             throw new NotFoundException("No order found for this id and this customer");

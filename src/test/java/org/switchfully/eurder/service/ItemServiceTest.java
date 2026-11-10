@@ -5,8 +5,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.switchfully.eurder.api.dto.CreateItemDto;
-import org.switchfully.eurder.api.dto.ItemDto;
+import org.switchfully.eurder.api.dto.CreateItemRequest;
+import org.switchfully.eurder.api.dto.ItemResponse;
 import org.switchfully.eurder.api.mapper.ItemMapper;
 import org.switchfully.eurder.domain.Item;
 import org.switchfully.eurder.domain.ItemRepository;
@@ -36,16 +36,16 @@ class ItemServiceTest {
     @Test
     void createItem_happyPath() {
         // GIVEN
-        CreateItemDto createItemDto = new CreateItemDto("Laptop", "MacBook Pro", new BigDecimal("1999.99"), 5);
+        CreateItemRequest createItemRequest = new CreateItemRequest("Laptop", "MacBook Pro", new BigDecimal("1999.99"), 5);
         Item testItem = new Item("Laptop", "MacBook Pro", new BigDecimal("1999.99"), 5);
-        ItemDto expectedDto = new ItemDto(testItem.getId(), "Laptop", "MacBook Pro", new BigDecimal("1999.99"), 5);
+        ItemResponse expectedDto = new ItemResponse(testItem.getId(), "Laptop", "MacBook Pro", new BigDecimal("1999.99"), 5);
 
-        when(itemMapper.mapToItem(createItemDto)).thenReturn(testItem);
+        when(itemMapper.mapToItem(createItemRequest)).thenReturn(testItem);
         when(itemRepository.save(testItem)).thenReturn(testItem);
         when(itemMapper.mapToItemDto(testItem)).thenReturn(expectedDto);
 
         // WHEN
-        ItemDto result = itemService.createItem(createItemDto);
+        ItemResponse result = itemService.createItem(createItemRequest);
 
         // THEN
         assertThat(result).isEqualTo(expectedDto);
@@ -57,13 +57,13 @@ class ItemServiceTest {
         // GIVEN
         String itemId = "test-uuid-123";
         Item itemMock = mock(Item.class);
-        ItemDto expectedDto = new ItemDto(itemId, "Mouse", "Ergonomic", new BigDecimal("49.99"), 10);
+        ItemResponse expectedDto = new ItemResponse(itemId, "Mouse", "Ergonomic", new BigDecimal("49.99"), 10);
 
         when(itemRepository.findById(itemId)).thenReturn(Optional.of(itemMock));
         when(itemMapper.mapToItemDto(itemMock)).thenReturn(expectedDto);
 
         // WHEN
-        ItemDto result = itemService.getItemById(itemId);
+        ItemResponse result = itemService.getItemById(itemId);
 
         // THEN
         assertThat(result).isEqualTo(expectedDto);
@@ -89,15 +89,15 @@ class ItemServiceTest {
         Item item2 = mock(Item.class);
         List<Item> itemsList = List.of(item1, item2);
 
-        ItemDto dto1 = new ItemDto("id-1", "Item 1", "Desc 1", new BigDecimal("10.0"), 2);
-        ItemDto dto2 = new ItemDto("id-2", "Item 2", "Desc 2", new BigDecimal("20.0"), 4);
-        Collection<ItemDto> expectedDtos = List.of(dto1, dto2);
+        ItemResponse dto1 = new ItemResponse("id-1", "Item 1", "Desc 1", new BigDecimal("10.0"), 2);
+        ItemResponse dto2 = new ItemResponse("id-2", "Item 2", "Desc 2", new BigDecimal("20.0"), 4);
+        Collection<ItemResponse> expectedDtos = List.of(dto1, dto2);
 
         when(itemRepository.findAll()).thenReturn(itemsList);
         when(itemMapper.mapToItemDto(itemsList)).thenReturn(expectedDtos);
 
         // WHEN
-        Collection<ItemDto> result = itemService.getAllItems();
+        Collection<ItemResponse> result = itemService.getAllItems();
 
         // THEN
         assertThat(result)

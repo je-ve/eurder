@@ -3,8 +3,8 @@ package org.switchfully.eurder.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.switchfully.eurder.api.dto.CreateCustomerDto;
-import org.switchfully.eurder.api.dto.UserDto;
+import org.switchfully.eurder.api.dto.CreateCustomerRequest;
+import org.switchfully.eurder.api.dto.UserResponse;
 import org.switchfully.eurder.api.mapper.UserMapper;
 import org.switchfully.eurder.domain.Role;
 import org.switchfully.eurder.domain.User;
@@ -25,17 +25,17 @@ public class UserService {
         this.userMapper = userMapper;
     }
 
-    public UserDto createCustomer(CreateCustomerDto createCustomerDto) {
-        validateEmailIsNotUsed(createCustomerDto.getEmail());
-        User customer = userMapper.mapToUser(createCustomerDto);
+    public UserResponse createCustomer(CreateCustomerRequest createCustomerRequest) {
+        validateEmailIsNotUsed(createCustomerRequest.getEmail());
+        User customer = userMapper.mapToUser(createCustomerRequest);
         return userMapper.mapToUserDto(userRepository.save(customer));
     }
 
-    public Collection<UserDto> getAllCustomers() {
+    public Collection<UserResponse> getAllCustomers() {
         return userMapper.mapToUserDto(userRepository.findAllByRole(Role.CUSTOMER));
     }
 
-    public UserDto getCustomerById(String id) {
+    public UserResponse getCustomerById(String id) {
         return userRepository.findCustomerById(id)
                 .map(userMapper::mapToUserDto)
                 .orElseThrow(() -> new CustomerNotFoundException(id));

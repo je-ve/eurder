@@ -2,13 +2,13 @@ package org.switchfully.eurder.api.dto;
 
 import java.math.BigDecimal;
 
-public class ItemGroupCustomerReportDto {
+public class ItemGroupCustomerReportResponse {
     private final String itemId;
     private final String name;
     private final int amount;
     private final BigDecimal totalPrice;
 
-    public ItemGroupCustomerReportDto(String itemId, String name, int amount, BigDecimal pricePerUnit) {
+    public ItemGroupCustomerReportResponse(String itemId, String name, int amount, BigDecimal pricePerUnit) {
         this.itemId = itemId;
         this.name = name;
         this.amount = amount;

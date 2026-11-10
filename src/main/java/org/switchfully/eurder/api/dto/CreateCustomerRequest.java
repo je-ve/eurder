@@ -1,28 +1,20 @@
 package org.switchfully.eurder.api.dto;
 
-import org.switchfully.eurder.domain.Role;
 
-public class UserDto {
-    private final String id;
+public class CreateCustomerRequest {
+
     private final String firstName;
     private final String lastName;
     private final String email;
-    private final AddressDto address;
+    private final AddressDto addressDto;
     private final String phoneNumber;
-    private final Role role;
 
-    public UserDto(String id, String firstName, String lastName, String email, AddressDto addressDto, String phoneNumber, Role role) {
-        this.id = id;
+    public CreateCustomerRequest(String firstName, String lastName, String email, AddressDto addressDto, String phoneNumber) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
-        this.address = addressDto;
+        this.addressDto = addressDto;
         this.phoneNumber = phoneNumber;
-        this.role = role;
-    }
-
-    public String getId() {
-        return id;
     }
 
     public String getFirstName() {
@@ -37,15 +29,11 @@ public class UserDto {
         return email;
     }
 
-    public AddressDto getAddress() {
-        return address;
+    public AddressDto getAddressDto() {
+        return addressDto;
     }
 
     public String getPhoneNumber() {
         return phoneNumber;
-    }
-
-    public Role getRole() {
-        return role;
     }
 }

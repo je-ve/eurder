@@ -12,6 +12,6 @@ public class AddressMapper {
     }
 
     public Address mapToAddress(AddressDto addressDto) {
-        return new Address(addressDto.getStreetName(), addressDto.getHouseNumber(), addressDto.getPostalCode(), addressDto.getCity());
+        return new Address(addressDto.streetName(), addressDto.houseNumber(), addressDto.postalCode(), addressDto.city());
     }
 }

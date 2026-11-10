@@ -5,8 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.switchfully.eurder.api.dto.CreateOrderDto;
-import org.switchfully.eurder.api.dto.CustomerReportDto;
-import org.switchfully.eurder.api.dto.OrderDto;
+import org.switchfully.eurder.api.dto.CustomerReportResponse;
+import org.switchfully.eurder.api.dto.OrderResponse;
 import org.switchfully.eurder.service.OrderService;
 
 @RestController
@@ -22,19 +22,19 @@ public class OrderController {
 
     @PostMapping(produces = "application/json", consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public OrderDto createOrder(@RequestBody CreateOrderDto createOrderDto) {
+    public OrderResponse createOrder(@RequestBody CreateOrderDto createOrderDto) {
         return orderService.createOrder(createOrderDto);
     }
 
     @GetMapping(path = "/customer/{id}", produces = "application/json")
-    public CustomerReportDto getItemById(@PathVariable String id) {
+    public CustomerReportResponse getItemById(@PathVariable String id) {
         return orderService.getCustomerReport(id);
     }
 
 
     @PostMapping(path = "/customer/{customerId}", produces = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public OrderDto reorderByOrderId(@PathVariable String customerId, @RequestBody String orderId) {
+    public OrderResponse reorderByOrderId(@PathVariable String customerId, @RequestBody String orderId) {
         logger.info("reorderByDto was called" + orderId);
         return orderService.reorderByOrderId(customerId, orderId);
     }

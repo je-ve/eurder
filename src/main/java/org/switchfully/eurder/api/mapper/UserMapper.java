@@ -1,8 +1,8 @@
 package org.switchfully.eurder.api.mapper;
 
 import org.springframework.stereotype.Component;
-import org.switchfully.eurder.api.dto.CreateCustomerDto;
-import org.switchfully.eurder.api.dto.UserDto;
+import org.switchfully.eurder.api.dto.CreateCustomerRequest;
+import org.switchfully.eurder.api.dto.UserResponse;
 import org.switchfully.eurder.domain.Role;
 import org.switchfully.eurder.domain.User;
 
@@ -17,17 +17,17 @@ public class UserMapper {
         this.addressMapper = addressMapper;
     }
 
-    public User mapToUser(CreateCustomerDto createCustomerDto) {
-        return new User(createCustomerDto.getFirstName(),
-                createCustomerDto.getLastName(),
-                createCustomerDto.getEmail(),
-                addressMapper.mapToAddress(createCustomerDto.getAddressDto()),
-                createCustomerDto.getPhoneNumber(),
+    public User mapToUser(CreateCustomerRequest createCustomerRequest) {
+        return new User(createCustomerRequest.getFirstName(),
+                createCustomerRequest.getLastName(),
+                createCustomerRequest.getEmail(),
+                addressMapper.mapToAddress(createCustomerRequest.getAddressDto()),
+                createCustomerRequest.getPhoneNumber(),
                 Role.CUSTOMER);
     }
 
-    public UserDto mapToUserDto(User user) {
-        return new UserDto(user.getId(),
+    public UserResponse mapToUserDto(User user) {
+        return new UserResponse(user.getId(),
                 user.getFirstName(),
                 user.getLastName(),
                 user.getEmail(),
@@ -35,7 +35,7 @@ public class UserMapper {
                 user.getPhoneNumber(), user.getRole());
     }
 
-    public Collection<UserDto> mapToUserDto(Collection<User> users) {
+    public Collection<UserResponse> mapToUserDto(Collection<User> users) {
         return users.stream().map(this::mapToUserDto).toList();
     }
 

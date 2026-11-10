@@ -4,8 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.switchfully.eurder.api.dto.CreateCustomerDto;
-import org.switchfully.eurder.api.dto.UserDto;
+import org.switchfully.eurder.api.dto.CreateCustomerRequest;
+import org.switchfully.eurder.api.dto.UserResponse;
 import org.switchfully.eurder.api.mapper.UserMapper;
 import org.switchfully.eurder.service.UserService;
 
@@ -26,16 +26,16 @@ public class CustomerController {
 
     @PostMapping(consumes = "application/json", produces = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public UserDto registerAsCustomer(@RequestBody CreateCustomerDto dto) {
+    public UserResponse registerAsCustomer(@RequestBody CreateCustomerRequest dto) {
         logger.info("register customer was called");
-        UserDto createdUser = userService.createCustomer(dto);
+        UserResponse createdUser = userService.createCustomer(dto);
         return createdUser;
     }
 
     @GetMapping(produces = "application/json")
     @ResponseStatus(HttpStatus.OK)
     //public Collection<UserDto> getAllCustomers(@RequestHeader(value = "Authorization", required = false) String authorization){
-    public Collection<UserDto> getAllCustomers() {
+    public Collection<UserResponse> getAllCustomers() {
         logger.info("getALlcustomers was called");
         //securityService.validateAuthorization(authorization, Feature.VIEW_MEMBERS);
         return userService.getAllCustomers();
@@ -43,7 +43,7 @@ public class CustomerController {
 
     @GetMapping(produces = "application/json", path = "/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public UserDto getById(@RequestParam("id") String id) {
+    public UserResponse getById(@RequestParam("id") String id) {
         return userService.getCustomerById(id);
     }
 

@@ -1,9 +1,9 @@
 package org.switchfully.eurder.service;
 
 import org.springframework.stereotype.Service;
-import org.switchfully.eurder.api.dto.CreateItemDto;
-import org.switchfully.eurder.api.dto.ItemDto;
-import org.switchfully.eurder.api.dto.UpdateItemDto;
+import org.switchfully.eurder.api.dto.CreateItemRequest;
+import org.switchfully.eurder.api.dto.ItemResponse;
+import org.switchfully.eurder.api.dto.UpdateItemRequest;
 import org.switchfully.eurder.api.mapper.ItemMapper;
 import org.switchfully.eurder.domain.Item;
 import org.switchfully.eurder.domain.ItemRepository;
@@ -22,27 +22,27 @@ public class ItemService {
         this.itemMapper = itemMapper;
     }
 
-    public ItemDto getItemById(String id) {
+    public ItemResponse getItemById(String id) {
         return itemRepository.findById(id)
                 .map(itemMapper::mapToItemDto)
                 .orElseThrow(() -> new ItemNotFoundException(id));
     }
 
-    public Collection<ItemDto> getAllItems() {
+    public Collection<ItemResponse> getAllItems() {
         return itemMapper.mapToItemDto(itemRepository.findAll());
     }
 
-    public ItemDto createItem(CreateItemDto createItemDto) {
-        Item item = itemMapper.mapToItem(createItemDto);
+    public ItemResponse createItem(CreateItemRequest createItemRequest) {
+        Item item = itemMapper.mapToItem(createItemRequest);
         return itemMapper.mapToItemDto(itemRepository.save(item));
     }
 
-    public ItemDto updateItem(String itemId, UpdateItemDto updateItemDto) {
+    public ItemResponse updateItem(String itemId, UpdateItemRequest updateItemRequest) {
         Item itemToUpdate = itemRepository.findById(itemId).orElseThrow(() -> new ItemNotFoundException(itemId));
-        itemToUpdate.setName(updateItemDto.getName());
-        itemToUpdate.setDescription(updateItemDto.getDescription());
-        itemToUpdate.setPrice(updateItemDto.getPrice());
-        itemToUpdate.setStock(updateItemDto.getStock());
+        itemToUpdate.setName(updateItemRequest.name());
+        itemToUpdate.setDescription(updateItemRequest.description());
+        itemToUpdate.setPrice(updateItemRequest.price());
+        itemToUpdate.setStock(updateItemRequest.stock());
         return itemMapper.mapToItemDto(itemRepository.save(itemToUpdate));
     }
 

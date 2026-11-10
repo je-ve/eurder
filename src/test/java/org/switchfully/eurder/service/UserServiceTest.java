@@ -5,8 +5,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.switchfully.eurder.api.dto.CreateCustomerDto;
-import org.switchfully.eurder.api.dto.UserDto;
+import org.switchfully.eurder.api.dto.CreateCustomerRequest;
+import org.switchfully.eurder.api.dto.UserResponse;
 import org.switchfully.eurder.api.mapper.UserMapper;
 import org.switchfully.eurder.domain.Role;
 import org.switchfully.eurder.domain.User;
@@ -39,11 +39,11 @@ class UserServiceTest {
     void createCustomer_happyPath() {
         // GIVEN
         String email = "john@doe.com";
-        CreateCustomerDto createDto = mock(CreateCustomerDto.class);
+        CreateCustomerRequest createDto = mock(CreateCustomerRequest.class);
         when(createDto.getEmail()).thenReturn(email);
 
         User customer = mock(User.class);
-        UserDto expectedDto = mock(UserDto.class);
+        UserResponse expectedDto = mock(UserResponse.class);
 
         when(userRepository.existsByEmailIgnoreCase(email)).thenReturn(false);
         when(userMapper.mapToUser(createDto)).thenReturn(customer);
@@ -51,7 +51,7 @@ class UserServiceTest {
         when(userMapper.mapToUserDto(customer)).thenReturn(expectedDto);
 
         // WHEN
-        UserDto result = userService.createCustomer(createDto);
+        UserResponse result = userService.createCustomer(createDto);
 
         // THEN
         assertThat(result).isEqualTo(expectedDto);
@@ -62,7 +62,7 @@ class UserServiceTest {
     void createCustomer_emailAlreadyExists_throwsException() {
         // GIVEN
         String email = "duplicate@test.com";
-        CreateCustomerDto createDto = mock(CreateCustomerDto.class);
+        CreateCustomerRequest createDto = mock(CreateCustomerRequest.class);
         when(createDto.getEmail()).thenReturn(email);
 
         when(userRepository.existsByEmailIgnoreCase(email)).thenReturn(true);
@@ -82,15 +82,15 @@ class UserServiceTest {
         User customer2 = mock(User.class);
         Collection<User> customersList = List.of(customer1, customer2);
 
-        UserDto dto1 = mock(UserDto.class);
-        UserDto dto2 = mock(UserDto.class);
-        Collection<UserDto> expectedDtos = List.of(dto1, dto2);
+        UserResponse dto1 = mock(UserResponse.class);
+        UserResponse dto2 = mock(UserResponse.class);
+        Collection<UserResponse> expectedDtos = List.of(dto1, dto2);
 
         when(userRepository.findAllByRole(Role.CUSTOMER)).thenReturn(customersList);
         when(userMapper.mapToUserDto(customersList)).thenReturn(expectedDtos);
 
         // WHEN
-        Collection<UserDto> result = userService.getAllCustomers();
+        Collection<UserResponse> result = userService.getAllCustomers();
 
         // THEN
         assertThat(result).containsExactlyInAnyOrder(dto1, dto2);
@@ -101,13 +101,13 @@ class UserServiceTest {
         // GIVEN
         String customerId = "cust-123";
         User customer = mock(User.class);
-        UserDto expectedDto = mock(UserDto.class);
+        UserResponse expectedDto = mock(UserResponse.class);
 
         when(userRepository.findCustomerById(customerId)).thenReturn(Optional.of(customer));
         when(userMapper.mapToUserDto(customer)).thenReturn(expectedDto);
 
         // WHEN
-        UserDto result = userService.getCustomerById(customerId);
+        UserResponse result = userService.getCustomerById(customerId);
 
         // THEN
         assertThat(result).isEqualTo(expectedDto);

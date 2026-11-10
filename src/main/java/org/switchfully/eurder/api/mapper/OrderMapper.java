@@ -1,9 +1,9 @@
 package org.switchfully.eurder.api.mapper;
 
 import org.springframework.stereotype.Component;
-import org.switchfully.eurder.api.dto.CustomerReportDto;
-import org.switchfully.eurder.api.dto.OrderCustomerReportDto;
-import org.switchfully.eurder.api.dto.OrderDto;
+import org.switchfully.eurder.api.dto.CustomerReportResponse;
+import org.switchfully.eurder.api.dto.OrderCustomerReportResponse;
+import org.switchfully.eurder.api.dto.OrderResponse;
 import org.switchfully.eurder.domain.ItemGroup;
 import org.switchfully.eurder.domain.Order;
 
@@ -20,18 +20,18 @@ public class OrderMapper {
         this.itemGroupMapper = itemGroupMapper;
     }
 
-    public OrderDto mapToDto(Order savedOrder, List<ItemGroup> itemGroups) {
-        return new OrderDto(savedOrder.getId(), savedOrder.getCustomerId(),
+    public OrderResponse mapToDto(Order savedOrder, List<ItemGroup> itemGroups) {
+        return new OrderResponse(savedOrder.getId(), savedOrder.getCustomerId(),
                 itemGroupMapper.mapToDto(itemGroups), savedOrder.getTotalPrice());
     }
 
-    public OrderCustomerReportDto mapToOrderCustomerReportDto(Order order, List<ItemGroup> itemGroups) {
-        return new OrderCustomerReportDto(order.getId(),
+    public OrderCustomerReportResponse mapToOrderCustomerReportDto(Order order, List<ItemGroup> itemGroups) {
+        return new OrderCustomerReportResponse(order.getId(),
                 itemGroupMapper.mapToCustomerReportDto(itemGroups), order.getTotalPrice());
     }
 
-    public CustomerReportDto mapToCustomerReportDto(Collection<Order> orders, Map<String, List<ItemGroup>> itemGroupsPerOrder) {
-        List<OrderCustomerReportDto> orderCustomerReportDtos = orders.stream()
+    public CustomerReportResponse mapToCustomerReportDto(Collection<Order> orders, Map<String, List<ItemGroup>> itemGroupsPerOrder) {
+        List<OrderCustomerReportResponse> orderCustomerReportResponses = orders.stream()
                 .map(order -> {
                     List<ItemGroup> groupsForOrder = itemGroupsPerOrder.getOrDefault(order.getId(), List.of());
                     return this.mapToOrderCustomerReportDto(order, groupsForOrder);
@@ -40,6 +40,6 @@ public class OrderMapper {
         double totalOfAllOrders = orders.stream()
                 .mapToDouble(order -> order.getTotalPrice().doubleValue())
                 .sum();
-        return new CustomerReportDto(orderCustomerReportDtos, totalOfAllOrders);
+        return new CustomerReportResponse(orderCustomerReportResponses, totalOfAllOrders);
     }
 }

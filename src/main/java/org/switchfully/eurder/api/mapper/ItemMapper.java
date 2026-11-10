@@ -1,8 +1,8 @@
 package org.switchfully.eurder.api.mapper;
 
 import org.springframework.stereotype.Component;
-import org.switchfully.eurder.api.dto.CreateItemDto;
-import org.switchfully.eurder.api.dto.ItemDto;
+import org.switchfully.eurder.api.dto.CreateItemRequest;
+import org.switchfully.eurder.api.dto.ItemResponse;
 import org.switchfully.eurder.domain.Item;
 
 import java.util.Collection;
@@ -10,18 +10,18 @@ import java.util.Collection;
 @Component
 public class ItemMapper {
 
-    public Item mapToItem(CreateItemDto createItemDto) {
-        return new Item(createItemDto.getName(),
-                createItemDto.getDescription(),
-                createItemDto.getPrice(),
-                createItemDto.getStock());
+    public Item mapToItem(CreateItemRequest createItemRequest) {
+        return new Item(createItemRequest.name(),
+                createItemRequest.description(),
+                createItemRequest.price(),
+                createItemRequest.stock());
     }
 
-    public ItemDto mapToItemDto(Item item) {
-        return new ItemDto(item.getId(), item.getName(), item.getDescription(), item.getPrice(), item.getStock());
+    public ItemResponse mapToItemDto(Item item) {
+        return new ItemResponse(item.getId(), item.getName(), item.getDescription(), item.getPrice(), item.getStock());
     }
 
-    public Collection<ItemDto> mapToItemDto(Collection<Item> items) {
+    public Collection<ItemResponse> mapToItemDto(Collection<Item> items) {
         return items.stream().map(this::mapToItemDto).toList();
     }
 
