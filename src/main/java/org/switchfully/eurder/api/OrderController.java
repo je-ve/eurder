@@ -4,10 +4,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.switchfully.eurder.api.dto.CreateOrderDto;
-import org.switchfully.eurder.api.dto.CustomerReportResponse;
-import org.switchfully.eurder.api.dto.OrderResponse;
+import org.switchfully.eurder.api.dto.*;
 import org.switchfully.eurder.service.OrderService;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(path = "/orders")
@@ -27,7 +27,7 @@ public class OrderController {
     }
 
     @GetMapping(path = "/customer/{id}", produces = "application/json")
-    public CustomerReportResponse getItemById(@PathVariable String id) {
+    public CustomerReportResponse getCustomerReport(@PathVariable String id) {
         return orderService.getCustomerReport(id);
     }
 
@@ -37,6 +37,10 @@ public class OrderController {
     public OrderResponse reorderByOrderId(@PathVariable String customerId, @RequestBody String orderId) {
         logger.info("reorderByDto was called" + orderId);
         return orderService.reorderByOrderId(customerId, orderId);
+    }
+    @GetMapping(path = "/today", produces = "application/json")
+    public List<ItemsGroupWithAddressResponse> getItemsShippingToday() {
+        return orderService.getItemsShippingToday();
     }
 }
 

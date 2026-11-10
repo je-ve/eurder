@@ -8,6 +8,8 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "orders")
+
+//TODO add address to order
 public class Order {
     @Id
     private String id;

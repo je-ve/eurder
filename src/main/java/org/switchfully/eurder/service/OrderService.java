@@ -2,15 +2,15 @@ package org.switchfully.eurder.service;
 
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
-import org.switchfully.eurder.api.dto.CreateItemGroupRequest;
-import org.switchfully.eurder.api.dto.CreateOrderDto;
-import org.switchfully.eurder.api.dto.CustomerReportResponse;
-import org.switchfully.eurder.api.dto.OrderResponse;
+import org.switchfully.eurder.api.dto.*;
+import org.switchfully.eurder.api.mapper.AddressMapper;
+import org.switchfully.eurder.api.mapper.ItemGroupMapper;
 import org.switchfully.eurder.api.mapper.OrderMapper;
 import org.switchfully.eurder.domain.*;
 import org.switchfully.eurder.exception.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -27,14 +27,18 @@ public class OrderService {
     private final ItemGroupRepository itemGroupRepository;
     private final UserRepository userRepository;
     private final OrderMapper orderMapper;
+    private final ItemGroupMapper itemGroupMapper;
+    private final AddressMapper addressMapper;
 
     public OrderService(OrderRepository orderRepository, ItemRepository itemRepository,
-                        ItemGroupRepository itemGroupRepository, UserRepository userRepository, OrderMapper orderMapper) {
+                        ItemGroupRepository itemGroupRepository, UserRepository userRepository, OrderMapper orderMapper, ItemGroupMapper itemGroupMapper, AddressMapper addressMapper) {
         this.orderRepository = orderRepository;
         this.itemRepository = itemRepository;
         this.itemGroupRepository = itemGroupRepository;
         this.userRepository = userRepository;
         this.orderMapper = orderMapper;
+        this.itemGroupMapper = itemGroupMapper;
+        this.addressMapper = addressMapper;
     }
 
     public OrderResponse createOrder(CreateOrderDto createOrderDto) {
@@ -116,6 +120,21 @@ public class OrderService {
                 orderRepository.save(new Order(customerId, calculateTotal(itemGroups))),
                 itemGroups
         );
+    }
+
+    //TODO after adding address to order, change address to address from order (not from customer)
+    public List<ItemsGroupWithAddressResponse> getItemsShippingToday() {
+        LocalDate today = LocalDate.now();
+        List<ItemGroup> shippingToday = itemGroupRepository.findAllByShippingDate(today);
+
+        return shippingToday.stream()
+                .map(itemGroup -> new ItemsGroupWithAddressResponse(
+                        itemGroupMapper.mapToDto(itemGroup),
+                        addressMapper.mapToDto(userRepository.findCustomerById(itemGroup.getOrder().getCustomerId())
+                                .orElseThrow(() -> new CustomerNotFoundException(itemGroup.getOrder().getCustomerId()))
+                                .getAddress())
+                ))
+                .toList();
     }
 }
 

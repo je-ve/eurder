@@ -16,8 +16,4 @@ public class CustomerReportResponse {
     public List<OrderCustomerReportResponse> getOrderCustomerReportDtos() {
         return orderCustomerReportResponses;
     }
-
-    public double getTotal() {
-        return total;
-    }
 }

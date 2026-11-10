@@ -21,7 +21,7 @@ public class ItemGroupMapper {
     }
 
     public ItemGroupCustomerReportResponse mapToCustomerReportDto(ItemGroup itemgroup) {
-        return new ItemGroupCustomerReportResponse(itemgroup.getItemId(), itemgroup.getName(), itemgroup.getAmount(),
+        return new ItemGroupCustomerReportResponse(itemgroup.getName(), itemgroup.getAmount(),
                 itemgroup.getPricePerUnit());
     }
 
