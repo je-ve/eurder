@@ -42,11 +42,10 @@ public class OrderService {
     }
 
     public OrderResponse createOrder(CreateOrderDto createOrderDto) {
-        //create existById method
         User customer = userRepository.findById(createOrderDto.getCustomerId())
                 .orElseThrow(() -> new CustomerNotFoundException(createOrderDto.getCustomerId()));
 
-        //todo move security check to controller, use feature not role
+        //TODO move security check to controller, use feature not role
         if (customer.getRole() != Role.CUSTOMER) {
             throw new ForbiddenException("Only registered customers can place orders.");
         }
@@ -62,10 +61,17 @@ public class OrderService {
             ItemGroup itemGroup = new ItemGroup(item, dto.getAmount(), createdOrder);
             itemGroups.add(itemGroup);
         }
-        itemGroupRepository.saveAll(itemGroups);
-
-        //TODO update stock
+        saveItemgroupsAndUpdateStock(itemGroups);
         return orderMapper.mapToDto(createdOrder, itemGroups);
+    }
+
+    private void saveItemgroupsAndUpdateStock(List<ItemGroup> itemGroups) {
+        itemGroupRepository.saveAll(itemGroups);
+        itemGroups.forEach(itemGroup -> {
+            Item item = itemRepository.findById(itemGroup.getItemId())
+                    .orElseThrow(() -> new ItemNotFoundException(itemGroup.getItemId()));
+            item.lowerStock(itemGroup.getAmount());
+        });
     }
 
     private BigDecimal calculateTotalForDtos(List<CreateItemGroupRequest> createItemGroupRequests) {
@@ -114,7 +120,7 @@ public class OrderService {
                         itemGroup.getAmount(),
                         order))
                 .toList();
-
+        saveItemgroupsAndUpdateStock(itemGroups);
 
         return orderMapper.mapToDto(
                 orderRepository.save(new Order(customerId, calculateTotal(itemGroups))),
