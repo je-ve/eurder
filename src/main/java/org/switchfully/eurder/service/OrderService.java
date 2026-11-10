@@ -41,22 +41,22 @@ public class OrderService {
         this.addressMapper = addressMapper;
     }
 
-    public OrderResponse createOrder(CreateOrderDto createOrderDto) {
-        User customer = userRepository.findById(createOrderDto.getCustomerId())
-                .orElseThrow(() -> new CustomerNotFoundException(createOrderDto.getCustomerId()));
+    public OrderResponse createOrder(CreateOrderRequest createOrderRequest) {
+        User customer = userRepository.findById(createOrderRequest.getCustomerId())
+                .orElseThrow(() -> new CustomerNotFoundException(createOrderRequest.getCustomerId()));
 
         //TODO move security check to controller, use feature not role
         if (customer.getRole() != Role.CUSTOMER) {
             throw new ForbiddenException("Only registered customers can place orders.");
         }
 
-        if (createOrderDto.getCreateItemGroupDtos() == null || createOrderDto.getCreateItemGroupDtos().isEmpty())
+        if (createOrderRequest.getCreateItemGroupDtos() == null || createOrderRequest.getCreateItemGroupDtos().isEmpty())
             throw new MissingItemGroupException();
 
-        Order createdOrder = orderRepository.save(new Order(customer.getId(), calculateTotalForDtos(createOrderDto.getCreateItemGroupDtos())));
+        Order createdOrder = orderRepository.save(new Order(customer.getId(), calculateTotalForDtos(createOrderRequest.getCreateItemGroupDtos())));
 
         List<ItemGroup> itemGroups = new ArrayList<>();
-        for (CreateItemGroupRequest dto : createOrderDto.getCreateItemGroupDtos()) {
+        for (CreateItemGroupRequest dto : createOrderRequest.getCreateItemGroupDtos()) {
             Item item = itemRepository.findById(dto.getItemId()).orElseThrow(() -> new ItemNotFoundException(dto.getItemId()));
             ItemGroup itemGroup = new ItemGroup(item, dto.getAmount(), createdOrder);
             itemGroups.add(itemGroup);
@@ -86,7 +86,6 @@ public class OrderService {
 
     private BigDecimal calculateTotal(List<ItemGroup> itemGroups) {
         return itemGroups.stream()
-                // Gebruik de methode die we in ItemGroup hebben gebouwd!
                 .map(ItemGroup::calculateGroupPrice)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }

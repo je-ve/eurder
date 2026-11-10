@@ -15,7 +15,6 @@ public class CreateItemGroupRequest {
     public String getItemId() {
         return itemId;
     }
-
     public int getAmount() {
         return amount;
     }

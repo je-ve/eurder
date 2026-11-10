@@ -22,8 +22,8 @@ public class OrderController {
 
     @PostMapping(produces = "application/json", consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public OrderResponse createOrder(@RequestBody CreateOrderDto createOrderDto) {
-        return orderService.createOrder(createOrderDto);
+    public OrderResponse createOrder(@RequestBody CreateOrderRequest createOrderRequest) {
+        return orderService.createOrder(createOrderRequest);
     }
 
     @GetMapping(path = "/customer/{id}", produces = "application/json")
