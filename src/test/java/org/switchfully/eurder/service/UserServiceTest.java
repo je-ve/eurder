@@ -8,6 +8,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.switchfully.eurder.api.dto.CreateCustomerDto;
 import org.switchfully.eurder.api.dto.UserDto;
 import org.switchfully.eurder.api.mapper.UserMapper;
+import org.switchfully.eurder.domain.Role;
 import org.switchfully.eurder.domain.User;
 import org.switchfully.eurder.domain.UserRepository;
 import org.switchfully.eurder.exception.CustomerNotFoundException;
@@ -44,7 +45,7 @@ class UserServiceTest {
         User customer = mock(User.class);
         UserDto expectedDto = mock(UserDto.class);
 
-        when(userRepository.existByEmail(email)).thenReturn(false);
+        when(userRepository.existsByEmailIgnoreCase(email)).thenReturn(false);
         when(userMapper.mapToUser(createDto)).thenReturn(customer);
         when(userRepository.save(any(User.class))).thenReturn(customer);
         when(userMapper.mapToUserDto(customer)).thenReturn(expectedDto);
@@ -64,7 +65,7 @@ class UserServiceTest {
         CreateCustomerDto createDto = mock(CreateCustomerDto.class);
         when(createDto.getEmail()).thenReturn(email);
 
-        when(userRepository.existByEmail(email)).thenReturn(true);
+        when(userRepository.existsByEmailIgnoreCase(email)).thenReturn(true);
 
         // WHEN & THEN
         assertThatThrownBy(() -> userService.createCustomer(createDto))
@@ -85,7 +86,7 @@ class UserServiceTest {
         UserDto dto2 = mock(UserDto.class);
         Collection<UserDto> expectedDtos = List.of(dto1, dto2);
 
-        when(userRepository.getAllCustomers()).thenReturn(customersList);
+        when(userRepository.findAllByRole(Role.CUSTOMER)).thenReturn(customersList);
         when(userMapper.mapToUserDto(customersList)).thenReturn(expectedDtos);
 
         // WHEN

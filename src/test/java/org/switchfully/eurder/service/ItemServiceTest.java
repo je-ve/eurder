@@ -12,6 +12,7 @@ import org.switchfully.eurder.domain.Item;
 import org.switchfully.eurder.domain.ItemRepository;
 import org.switchfully.eurder.exception.ItemNotFoundException;
 
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -35,9 +36,9 @@ class ItemServiceTest {
     @Test
     void createItem_happyPath() {
         // GIVEN
-        CreateItemDto createItemDto = new CreateItemDto("Laptop", "MacBook Pro", 1999.99, 5);
-        Item testItem = new Item("Laptop", "MacBook Pro", 1999.99, 5);
-        ItemDto expectedDto = new ItemDto(testItem.getId(), "Laptop", "MacBook Pro", 1999.99, 5);
+        CreateItemDto createItemDto = new CreateItemDto("Laptop", "MacBook Pro", new BigDecimal("1999.99"), 5);
+        Item testItem = new Item("Laptop", "MacBook Pro", new BigDecimal("1999.99"), 5);
+        ItemDto expectedDto = new ItemDto(testItem.getId(), "Laptop", "MacBook Pro", new BigDecimal("1999.99"), 5);
 
         when(itemMapper.mapToItem(createItemDto)).thenReturn(testItem);
         when(itemRepository.save(testItem)).thenReturn(testItem);
@@ -56,7 +57,7 @@ class ItemServiceTest {
         // GIVEN
         String itemId = "test-uuid-123";
         Item itemMock = mock(Item.class);
-        ItemDto expectedDto = new ItemDto(itemId, "Mouse", "Ergonomic", 49.99, 10);
+        ItemDto expectedDto = new ItemDto(itemId, "Mouse", "Ergonomic", new BigDecimal("49.99"), 10);
 
         when(itemRepository.findById(itemId)).thenReturn(Optional.of(itemMock));
         when(itemMapper.mapToItemDto(itemMock)).thenReturn(expectedDto);
@@ -86,13 +87,13 @@ class ItemServiceTest {
         // GIVEN
         Item item1 = mock(Item.class);
         Item item2 = mock(Item.class);
-        Collection<Item> itemsList = List.of(item1, item2);
+        List<Item> itemsList = List.of(item1, item2);
 
-        ItemDto dto1 = new ItemDto("id-1", "Item 1", "Desc 1", 10.0, 2);
-        ItemDto dto2 = new ItemDto("id-2", "Item 2", "Desc 2", 20.0, 4);
+        ItemDto dto1 = new ItemDto("id-1", "Item 1", "Desc 1", new BigDecimal("10.0"), 2);
+        ItemDto dto2 = new ItemDto("id-2", "Item 2", "Desc 2", new BigDecimal("20.0"), 4);
         Collection<ItemDto> expectedDtos = List.of(dto1, dto2);
 
-        when(itemRepository.getAll()).thenReturn(itemsList);
+        when(itemRepository.findAll()).thenReturn(itemsList);
         when(itemMapper.mapToItemDto(itemsList)).thenReturn(expectedDtos);
 
         // WHEN

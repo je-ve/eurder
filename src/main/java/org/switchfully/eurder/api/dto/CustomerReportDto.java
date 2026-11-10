@@ -1,5 +1,4 @@
 package org.switchfully.eurder.api.dto;
-
 import java.util.List;
 
 public class CustomerReportDto {

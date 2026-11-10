@@ -10,6 +10,7 @@ import org.switchfully.eurder.api.mapper.OrderMapper;
 import org.switchfully.eurder.domain.*;
 import org.switchfully.eurder.exception.*;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -49,7 +50,7 @@ public class OrderService {
         if (createOrderDto.getCreateItemGroupDtos() == null || createOrderDto.getCreateItemGroupDtos().isEmpty())
             throw new MissingItemGroupException();
 
-        Order createdOrder = orderRepository.save(new Order(customer.getId(), calculateTotal(createOrderDto.getCreateItemGroupDtos())));
+        Order createdOrder = orderRepository.save(new Order(customer.getId(), calculateTotalForDtos(createOrderDto.getCreateItemGroupDtos())));
 
         List<ItemGroup> itemGroups = new ArrayList<>();
         for (CreateItemGroupDto dto : createOrderDto.getCreateItemGroupDtos()) {
@@ -63,20 +64,30 @@ public class OrderService {
         return orderMapper.mapToDto(createdOrder, itemGroups);
     }
 
-    private double calculateTotal(List<CreateItemGroupDto> createItemGroupDtos) {
+    private BigDecimal calculateTotalForDtos(List<CreateItemGroupDto> createItemGroupDtos) {
         return createItemGroupDtos.stream()
-                .mapToDouble(itemGroup -> {
+                .map(itemGroup -> {
                     Item item = itemRepository.findById(itemGroup.getItemId())
                             .orElseThrow(() -> new ItemNotFoundException(itemGroup.getItemId()));
-                    return itemGroup.getAmount() * item.getPrice();
+                    return item.getPrice().multiply(BigDecimal.valueOf(itemGroup.getAmount()));
                 })
-                .sum();
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    private BigDecimal calculateTotal(List<ItemGroup> itemGroups) {
+        return itemGroups.stream()
+                // Gebruik de methode die we in ItemGroup hebben gebouwd!
+                .map(ItemGroup::calculateGroupPrice)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     public CustomerReportDto getCustomerReport(String customerId) {
+
         if (!userRepository.existsByIdAndRole(customerId, Role.CUSTOMER))
             throw new CustomerNotFoundException(customerId);
+
         Collection<Order> orders = orderRepository.findAllByCustomerId(customerId);
+
         List<String> orderIds = orders.stream().map(Order::getId).toList();
         List<ItemGroup> allItemGroups = itemGroupRepository.findAllByOrderIdIn(orderIds);
 
@@ -84,24 +95,27 @@ public class OrderService {
                 .collect(Collectors.groupingBy(itemGroup -> itemGroup.getOrder().getId()));
 
         return orderMapper.mapToCustomerReportDto(orders, itemGroupsPerOrder);
-
-        //nog totaal berekenene en dan customerReportDto maken met bovenstaande lijst
     }
 
 
-  /*
     public OrderDto reorderByOrderId(String customerId, String orderId) {
         Order order = orderRepository.findById(orderId).orElseThrow(() -> new OrderNotFoundException(orderId));
         if (!order.getCustomerId().equals(customerId))
-            throw new ForbiddenException("No order found for this id and this customer");
-        List<ItemGroup> itemGroups = order.getItemGroups().stream()
+            throw new NotFoundException("No order found for this id and this customer");
+
+        List<ItemGroup> itemGroups = itemGroupRepository.findAllByOrderId(orderId).stream()
                 .map(itemGroup -> new ItemGroup(
                         itemRepository.findById(itemGroup.getItemId())
                                 .orElseThrow(() -> new ItemNotFoundException(itemGroup.getItemId())),
-                        itemGroup.getAmount())).toList();
-        return orderMapper.mapToDto(orderRepository.save(new Order(customerId, itemGroups)));
-    }
-    */
+                        itemGroup.getAmount(),
+                        order))
+                .toList();
 
+
+        return orderMapper.mapToDto(
+                orderRepository.save(new Order(customerId, calculateTotal(itemGroups))),
+                itemGroups
+        );
+    }
 }
 

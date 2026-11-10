@@ -3,14 +3,19 @@ package org.switchfully.eurder.domain;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
+import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase;
+import org.springframework.test.context.TestPropertySource;
+
 
 import java.util.Collection;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
+@DataJpaTest
+@AutoConfigureTestDatabase
+@TestPropertySource(properties = "spring.jpa.hibernate.ddl-auto=create-drop")
 class UserRepositoryTest {
 
     @Autowired
@@ -63,7 +68,7 @@ class UserRepositoryTest {
     }
 
     @Test
-    void getAll_returnsAllSavedUsers() {
+    void findAll_returnsAllSavedUsers() {
         // GIVEN
         User customer = new User("Alice", "Smith", "alice@test.com", defaultAddress, "0477112233", Role.CUSTOMER);
         User admin = new User("Bob", "Jones", "bob@admin.com", defaultAddress, "0477445566", Role.ADMIN);
@@ -71,7 +76,7 @@ class UserRepositoryTest {
         userRepository.save(admin);
 
         // WHEN
-        Collection<User> allUsers = userRepository.getAll();
+        Collection<User> allUsers = userRepository.findAll();
 
         // THEN
         assertThat(allUsers).hasSize(2).containsExactlyInAnyOrder(customer, admin);
@@ -89,7 +94,7 @@ class UserRepositoryTest {
         userRepository.save(admin);
 
         // WHEN
-        Collection<User> customers = userRepository.getAllCustomers();
+        Collection<User> customers = userRepository.findAllByRole(Role.CUSTOMER);
 
         // THEN
         assertThat(customers).hasSize(2).containsExactlyInAnyOrder(customer1, customer2);
@@ -102,13 +107,13 @@ class UserRepositoryTest {
         userRepository.save(user);
 
         // WHEN & THEN
-        assertThat(userRepository.existByEmail("john@doe.com")).isTrue();
-        assertThat(userRepository.existByEmail("JOHN@DOE.COM")).isTrue();
+        assertThat(userRepository.existsByEmailIgnoreCase("john@doe.com")).isTrue();
+        assertThat(userRepository.existsByEmailIgnoreCase("JOHN@DOE.COM")).isTrue();
     }
 
     @Test
     void existByEmail_returnsFalse_whenEmailDoesNotExist() {
         // WHEN & THEN
-        assertThat(userRepository.existByEmail("notfound@test.com")).isFalse();
+        assertThat(userRepository.existsByEmailIgnoreCase("notfound@test.com")).isFalse();
     }
 }

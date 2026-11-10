@@ -1,12 +1,14 @@
 package org.switchfully.eurder.api.dto;
 
+import java.math.BigDecimal;
+
 public class UpdateItemDto {
     private final String name;
     private final String description;
-    private final double price;
+    private final BigDecimal price;
     private final int stock;
 
-    public UpdateItemDto(String name, String description, double price, int stock) {
+    public UpdateItemDto(String name, String description, BigDecimal price, int stock) {
         this.name = name;
         this.description = description;
         this.price = price;
@@ -21,7 +23,7 @@ public class UpdateItemDto {
         return description;
     }
 
-    public double getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 

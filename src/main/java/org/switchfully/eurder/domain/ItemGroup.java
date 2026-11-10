@@ -2,6 +2,7 @@ package org.switchfully.eurder.domain;
 
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -14,7 +15,7 @@ public class ItemGroup {
     private String itemId;
     private String name;
     private int amount;
-    private double pricePerUnit;
+    private BigDecimal pricePerUnit;
     private LocalDate shippingDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -39,8 +40,8 @@ public class ItemGroup {
     public ItemGroup() {
     }
 
-    public double calculateGroupPrice() {
-        return this.pricePerUnit * this.amount;
+    public BigDecimal calculateGroupPrice() {
+        return this.pricePerUnit.multiply(BigDecimal.valueOf(this.amount));
     }
 
     public String getItemId() {
@@ -55,7 +56,7 @@ public class ItemGroup {
         return amount;
     }
 
-    public double getPricePerUnit() {
+    public BigDecimal getPricePerUnit() {
         return pricePerUnit;
     }
 

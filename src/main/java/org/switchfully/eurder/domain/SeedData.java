@@ -1,10 +1,7 @@
 package org.switchfully.eurder.domain;
-
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
-
+import java.math.BigDecimal;
 
 @Component
 public class SeedData {
@@ -31,9 +28,9 @@ public class SeedData {
     private final User secondCustomer = User.createWithId("user-id-002", "Piet", "Pieters", "piet@pieters.com", secondAddress, "+32125302157", Role.CUSTOMER);
     private final User firstAdmin = User.createWithId("user-id-003", "Hans", "Hansens", "hans@hansens.com", firstAddress, "+32125302157", Role.ADMIN);
 
-    private final Item firstItem = Item.createWithId("item-id-001", "computer", "a computer", 10.0, 10);
-    private final Item secondItem = Item.createWithId("item-id-002", "table", "a table", 20.0, 20);
-    private final Item thirdItem = Item.createWithId("item-id-003", "TV", "a TV", 5.0, 30);
+    private final Item firstItem = Item.createWithId("item-id-001", "computer", "a computer", BigDecimal.valueOf(10.0), 10);
+    private final Item secondItem = Item.createWithId("item-id-002", "table", "a table", BigDecimal.valueOf(20.0), 20);
+    private final Item thirdItem = Item.createWithId("item-id-003", "TV", "a TV", BigDecimal.valueOf(5.0), 30);
 
     /*
       private final ItemGroup firstItemGroup = new ItemGroup(firstItem, 5);
@@ -51,21 +48,13 @@ public class SeedData {
     @PostConstruct
     public void init() {
         if (addSeedData()) {
-            // Sla de gebruikers op
             userRepository.save(firstCustomer);
             userRepository.save(secondCustomer);
             userRepository.save(firstAdmin);
 
-            // Sla de items op
             itemRepository.save(firstItem);
             itemRepository.save(secondItem);
             itemRepository.save(thirdItem);
-
-            // Sla de orders op
-         /*
-            orderRepository.save(firstOrder);
-            orderRepository.save(secondOrder);
-          */
         }
     }
 }

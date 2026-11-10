@@ -30,9 +30,8 @@ public class SecurityService {
 
         String username = parts[0];
         String password = parts[1];
-        User user = userRepository.getByEmail(username).orElseThrow(() -> new UnauthorizedException("Wrong credentials"));
+        User user = userRepository.findByEmailIgnoreCase(username).orElseThrow(() -> new UnauthorizedException("Wrong credentials"));
         if (!user.doesPasswordMatch(password)) throw new UnauthorizedException("Wrong credentials");
         if (!user.canHaveAccessTo(feature)) throw new ForbiddenException("No acces");
-        return;
     }
 }

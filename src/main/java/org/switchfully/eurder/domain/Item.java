@@ -4,6 +4,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+import java.math.BigDecimal;
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
@@ -14,10 +16,10 @@ public class Item {
     private String id;
     private String name;
     private String description;
-    private double price;
+    private BigDecimal price;
     private int stock;
 
-    public Item(String name, String description, double price, int stock) {
+    public Item(String name, String description, BigDecimal price, int stock) {
         this.id = UUID.randomUUID().toString();
         this.name = name;
         this.description = description;
@@ -48,11 +50,11 @@ public class Item {
         this.description = description;
     }
 
-    public double getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 
@@ -74,11 +76,11 @@ public class Item {
 
 
     //SEED
-    public static Item createWithId(String id, String name, String description, double price, int stock) {
+    public static Item createWithId(String id, String name, String description, BigDecimal price, int stock) {
         return new Item(id, name, description, price, stock);
     }
 
-    private Item(String id, String name, String description, double price, int stock) {
+    private Item(String id, String name, String description, BigDecimal price, int stock) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -86,4 +88,15 @@ public class Item {
         this.stock = stock;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Item item = (Item) o;
+        return Objects.equals(id, item.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
 }

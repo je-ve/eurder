@@ -7,6 +7,7 @@ import org.switchfully.eurder.api.dto.CreateItemDto;
 import org.switchfully.eurder.api.dto.ItemDto;
 import org.switchfully.eurder.service.ItemService;
 
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.List;
 
@@ -27,8 +28,8 @@ class ItemControllerTest {
     @Test
     void getAll_returnsItemsFromService() {
         // GIVEN
-        ItemDto item1 = new ItemDto("id-1", "Laptop", "Apple M1", 1200.00, 5);
-        ItemDto item2 = new ItemDto("id-2", "Mouse", "Logitech MX", 80.00, 10);
+        ItemDto item1 = new ItemDto("id-1", "Laptop", "Apple M1", new BigDecimal("1200.00"), 5);
+        ItemDto item2 = new ItemDto("id-2", "Mouse", "Logitech MX", new BigDecimal("80.00"), 10);
         when(itemService.getAllItems()).thenReturn(List.of(item1, item2));
 
         // WHEN
@@ -43,7 +44,7 @@ class ItemControllerTest {
     void getItemById_delegatesToService() {
         // GIVEN
         String itemId = "id-123";
-        ItemDto expectedDto = new ItemDto(itemId, "Keyboard", "Mechanical", 150.00, 3);
+        ItemDto expectedDto = new ItemDto(itemId, "Keyboard", "Mechanical", new BigDecimal("150.00"), 3);
         when(itemService.getItemById(itemId)).thenReturn(expectedDto);
 
         // WHEN
@@ -57,8 +58,8 @@ class ItemControllerTest {
     @Test
     void createItem_callsServiceAndReturnsCreatedItem() {
         // GIVEN
-        CreateItemDto createItemDto = new CreateItemDto("Monitor", "4K Display", 350.00, 2);
-        ItemDto savedDto = new ItemDto("new-uuid", "Monitor", "4K Display", 350.00, 2);
+        CreateItemDto createItemDto = new CreateItemDto("Monitor", "4K Display", new BigDecimal("350.00"), 2);
+        ItemDto savedDto = new ItemDto("new-uuid", "Monitor", "4K Display", new BigDecimal("350.00"), 2);
         when(itemService.createItem(createItemDto)).thenReturn(savedDto);
 
         // WHEN

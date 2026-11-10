@@ -4,11 +4,9 @@ import org.springframework.stereotype.Service;
 import org.switchfully.eurder.api.dto.CreateItemDto;
 import org.switchfully.eurder.api.dto.ItemDto;
 import org.switchfully.eurder.api.dto.UpdateItemDto;
-import org.switchfully.eurder.api.dto.UserDto;
 import org.switchfully.eurder.api.mapper.ItemMapper;
 import org.switchfully.eurder.domain.Item;
 import org.switchfully.eurder.domain.ItemRepository;
-import org.switchfully.eurder.exception.CustomerNotFoundException;
 import org.switchfully.eurder.exception.ItemNotFoundException;
 
 import java.util.Collection;
@@ -31,7 +29,7 @@ public class ItemService {
     }
 
     public Collection<ItemDto> getAllItems() {
-        return itemMapper.mapToItemDto(itemRepository.getAll());
+        return itemMapper.mapToItemDto(itemRepository.findAll());
     }
 
     public ItemDto createItem(CreateItemDto createItemDto) {
@@ -47,7 +45,6 @@ public class ItemService {
         itemToUpdate.setStock(updateItemDto.getStock());
         return itemMapper.mapToItemDto(itemRepository.save(itemToUpdate));
     }
-
 
 
 }

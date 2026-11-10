@@ -1,18 +1,28 @@
 package org.switchfully.eurder.domain;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
 
+@Embeddable
 public class Address {
 
-    private final String streetName;
-    private final String houseNumber;
-    private final String postalCode;
-    private final String city;
+    @Column(name = "address_street_name")
+    private String streetName;
+    @Column(name = "address_house_number")
+    private String houseNumber;
+    @Column(name = "address_postal_code")
+    private String postalCode;
+    @Column(name = "address_city")
+    private String city;
 
     public Address(String streetName, String houseNumber, String postalCode, String city) {
         this.streetName = streetName;
         this.houseNumber = houseNumber;
         this.postalCode = postalCode;
         this.city = city;
+    }
+
+    public Address() {
     }
 
     public String getStreetName() {

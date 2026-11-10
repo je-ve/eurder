@@ -1,14 +1,11 @@
 package org.switchfully.eurder.domain;
 
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.util.UUID;
 
 @Entity
-@Table(name="users")
+@Table(name = "users")
 public class User {
 
     @Id
@@ -21,6 +18,7 @@ public class User {
     @Embedded
     private Address address;
     private String phoneNumber;
+    @Enumerated(EnumType.STRING)
     private Role role;
 
     public User(String firstName, String lastName, String email, Address address, String phoneNumber, Role role) {
@@ -49,10 +47,6 @@ public class User {
         return lastName;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
     public String getEmail() {
         return email;
     }
@@ -72,6 +66,7 @@ public class User {
     public boolean doesPasswordMatch(String password) {
         return this.password.equals(password);
     }
+
     public boolean canHaveAccessTo(Feature feature) {
         return role.containsFeature(feature);
     }
@@ -91,6 +86,22 @@ public class User {
         this.address = address;
         this.phoneNumber = phoneNumber;
         this.role = role;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        User user = (User) o;
+
+        // Twee gebruikers zijn gelijk als hun unieke ID gelijk is
+        return id != null ? id.equals(user.id) : user.id == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
     }
 
 

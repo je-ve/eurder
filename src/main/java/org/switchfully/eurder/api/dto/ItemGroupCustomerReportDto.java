@@ -1,16 +1,18 @@
 package org.switchfully.eurder.api.dto;
 
+import java.math.BigDecimal;
+
 public class ItemGroupCustomerReportDto {
     private final String itemId;
     private final String name;
     private final int amount;
-    private final double totalPrice;
+    private final BigDecimal totalPrice;
 
-    public ItemGroupCustomerReportDto(String itemId, String name, int amount, double pricePerUnit) {
+    public ItemGroupCustomerReportDto(String itemId, String name, int amount, BigDecimal pricePerUnit) {
         this.itemId = itemId;
         this.name = name;
         this.amount = amount;
-        this.totalPrice = pricePerUnit*amount;
+        this.totalPrice = pricePerUnit.multiply(BigDecimal.valueOf(amount));
     }
 
     public String getItemId() {
@@ -25,7 +27,9 @@ public class ItemGroupCustomerReportDto {
         return amount;
     }
 
-    public double getTotalPrice() { return totalPrice; }
+    public BigDecimal getTotalPrice() {
+        return totalPrice;
+    }
 }
 
 
